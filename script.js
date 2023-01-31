@@ -5,6 +5,7 @@ const btn = document.querySelector('button')
 const tries = document.getElementById('tries')
 const timer = document.getElementById('timer')
 const matches = document.getElementById('matches')
+const total = document.getElementById('total')
 
 
 let card1 = null;
@@ -15,21 +16,25 @@ const gameProps = {
     matches: 0,
     tries: 0,
     timeElapsed: 0,
-    gameOn: false
+    gameOn: false,
+    total: 0
 }
 
 
-const COLORS = [
-  "red",
-  "blue",
-  "green",
-  "orange",
-  "purple",
-  "red",
-  "blue",
-  "green",
-  "orange",
-  "purple"
+const GAMEBOARD = [
+  'https://images.unsplash.com/photo-1674903745215-0267b9c6baeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80',
+  'https://images.unsplash.com/photo-1674766557958-cf06f147d182?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1173&q=80',
+  'https://images.unsplash.com/photo-1674903745215-0267b9c6baeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80',
+  'https://images.unsplash.com/photo-1674766557958-cf06f147d182?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1173&q=80',
+  'https://images.unsplash.com/photo-1673643108094-7bf50d7c7d1c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=694&q=80',
+  'https://images.unsplash.com/photo-1673643108094-7bf50d7c7d1c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=694&q=80',
+  'https://images.unsplash.com/photo-1661454426786-8e6adbeeec82?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=757&q=80',
+  'https://images.unsplash.com/photo-1661454426786-8e6adbeeec82?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=757&q=80',
+  'https://images.unsplash.com/photo-1674066636011-d445199acada?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=674&q=80',
+  'https://images.unsplash.com/photo-1674066636011-d445199acada?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=674&q=80',
+  'https://images.unsplash.com/photo-1673874246309-de6d5fc34369?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80',
+  'https://images.unsplash.com/photo-1673874246309-de6d5fc34369?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80'
+
 ];
 
 // here is a helper function to shuffle an array
@@ -37,6 +42,8 @@ const COLORS = [
 // it is based on an algorithm called Fisher Yates if you want ot research more
 function shuffle(array) {
   let counter = array.length;
+  gameProps.total = array.length / 2;
+
 
   // While there are elements in the array
   while (counter > 0) {
@@ -55,19 +62,20 @@ function shuffle(array) {
   return array;
 }
 
-let shuffledColors = shuffle(COLORS);
+let shuffledItems = shuffle(GAMEBOARD);
 
 // this function loops over the array of colors
 // it creates a new div and gives it a class with the value of the color
 // it also adds an event listener for a click for each card
-function createDivsForColors(colorArray) {
-  for (let color of colorArray) {
+function createDivsForItems(itemArray) {
+  for (let item of itemArray) {
     
     // create a new div
     const newDiv = document.createElement("div");
-
-    // give it a class attribute for the value we are looping over
-    newDiv.classList.add(color);
+    newDiv.classList.add('itemDiv')
+    newDiv.innerHTML = `<img src='${item}' class='hidden'/>`
+    total.innerHTML = itemArray.length / 2;
+    newDiv.ondragstart = ()=>{return false;}
 
     // call a function handleCardClick when a div is clicked on
     newDiv.addEventListener("click", handleCardClick);
@@ -80,31 +88,30 @@ function createDivsForColors(colorArray) {
 // TODO: Implement this function!
 function handleCardClick(event) {
   // you can use event.target to see which element was clicked
-  // console.log("you just clicked", event.target);
   if(!gameProps.gameOn) {
     return
   }
-  else {event.target.style.backgroundColor = event.target.className}
+  else {event.target.className = ''}
 
   if(!card1) {
-    card1 = event.target
-    card1.removeEventListener('click', handleCardClick)
+    card1 = event.target;
+    card1.parentNode.removeEventListener('click', handleCardClick)
     return
   }
   else {
     card2 = event.target;
-    card2.removeEventListener('click', handleCardClick)
-    if(card1.className == card2.className){
+    card2.parentNode.removeEventListener('click', handleCardClick)
+    if(card1.outerHTML == card2.outerHTML ){
       gameProps.matches ++;
       matches.innerHTML = gameProps.matches;
       clearCards();
-      gameProps.matches == gameContainer.children.length / 2 ? winner() : null;
+      gameProps.matches == gameProps.total ? winner() : null;
     }
     else {
       gameProps.gameOn = false;
       setTimeout(()=> {
-        card1.style.backgroundColor = null;
-        card2.style.backgroundColor = null;
+        card1.className = 'hidden';
+        card2.className = 'hidden';
         card1.addEventListener('click', handleCardClick)
         card2.addEventListener('click', handleCardClick)
         clearCards();
@@ -135,7 +142,8 @@ function resetProps() {
 }
 
 function winner() {
-  over.innerText = 'GAME OVER!!!'; 
+  setTimeout(()=> {alert('GAME OVER!!!'); 
+
   clearInterval(timerId);
   if(gameProps.tries < localStorage.highscoreTries || !localStorage.highscoreTries) {
     localStorage.setItem('highscoreTries', gameProps.tries +1)
@@ -143,7 +151,8 @@ function winner() {
   if(gameProps.timeElapsed < localStorage.highscoreTime || !localStorage.highscoreTime) {
     localStorage.setItem('highscoreTime', gameProps.timeElapsed)
   }
-  updateHighScores();
+  updateHighScores();}, 100)
+  
 }
 
 function updateHighScores() {
@@ -154,14 +163,14 @@ function updateHighScores() {
 }
 
 // when the DOM loads
-createDivsForColors(shuffledColors);
+createDivsForItems(shuffledItems);
 updateHighScores();
 
 btn.addEventListener('click', function() {
   if(timerId) {clearInterval(timerId)}
   resetProps();
-  shuffle(COLORS);
-  createDivsForColors(shuffledColors);
+  shuffle(GAMEBOARD);
+  createDivsForItems(shuffledItems);
   timerId = setInterval(function() {
     gameProps.timeElapsed++;
     timer.innerHTML = gameProps.timeElapsed
@@ -169,4 +178,3 @@ btn.addEventListener('click', function() {
 })
 
 
-/* */

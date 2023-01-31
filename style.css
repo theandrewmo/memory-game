@@ -1,10 +1,11 @@
-#game div {
+.itemDiv {
   border: 1px solid black;
-  width: 15%;
+  width: 200px;
   height: 200px;
   margin: 10px;
   display: inline-block;
   background-color: white;
+  opacity: 1
 }
 
 
@@ -27,5 +28,15 @@ button {
 
 #records {
   margin-top: 30px;
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hidden {
+  opacity: 0;
 }
 
