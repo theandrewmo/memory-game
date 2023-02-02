@@ -87,7 +87,6 @@ function createDivsForItems(itemArray) {
 
 // TODO: Implement this function!
 function handleCardClick(event) {
-  console.log(event.target)
   // you can use event.target to see which element was clicked
   if(!gameProps.gameOn) {
     return
