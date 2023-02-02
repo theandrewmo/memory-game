@@ -149,7 +149,7 @@ function winner() {
 
   clearInterval(timerId);
   if(gameProps.tries < localStorage.highscoreTries || !localStorage.highscoreTries) {
-    localStorage.setItem('highscoreTries', gameProps.tries +1)
+    localStorage.setItem('highscoreTries', gameProps.tries)
   }
   if(gameProps.timeElapsed < localStorage.highscoreTime || !localStorage.highscoreTime) {
     localStorage.setItem('highscoreTime', gameProps.timeElapsed)
