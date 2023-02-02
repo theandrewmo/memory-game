@@ -87,39 +87,42 @@ function createDivsForItems(itemArray) {
 
 // TODO: Implement this function!
 function handleCardClick(event) {
+  console.log(event.target)
   // you can use event.target to see which element was clicked
   if(!gameProps.gameOn) {
     return
   }
-  else {event.target.className = ''}
+  else if (event.target.parentNode.className == 'itemDiv'){
+    event.target.className = '';
+    if(!card1) {
+      card1 = event.target;
+      card1.parentNode.removeEventListener('click', handleCardClick)
+      return
+    }
+    else if(!card2) {
+      card2 = event.target;
+      card2.parentNode.removeEventListener('click', handleCardClick)
+      
+      if(card1.outerHTML == card2.outerHTML){
+        gameProps.matches ++;
+        matches.innerHTML = gameProps.matches;
+        (gameProps.matches == gameProps.total) ? winner() : clearCards();
+      }
 
-  if(!card1) {
-    card1 = event.target;
-    card1.parentNode.removeEventListener('click', handleCardClick)
-    return
-  }
-  else {
-    card2 = event.target;
-    card2.parentNode.removeEventListener('click', handleCardClick)
-    if(card1.outerHTML == card2.outerHTML ){
-      gameProps.matches ++;
-      matches.innerHTML = gameProps.matches;
-      clearCards();
-      gameProps.matches == gameProps.total ? winner() : null;
-    }
-    else {
-      gameProps.gameOn = false;
-      setTimeout(()=> {
-        card1.className = 'hidden';
-        card2.className = 'hidden';
-        card1.addEventListener('click', handleCardClick)
-        card2.addEventListener('click', handleCardClick)
-        clearCards();
-        gameProps.gameOn = true;
-        
-      },1000)
+      else {
+        gameProps.gameOn = false;
+        setTimeout(()=> {
+          card1.className = 'hidden';
+          card2.className = 'hidden';
+          card1.parentNode.addEventListener('click', handleCardClick)
+          card2.parentNode.addEventListener('click', handleCardClick)
+          clearCards();
+          gameProps.gameOn = true; 
+        },1000)
+      }
     }
   }
+
   gameProps.tries ++;
   tries.innerHTML = gameProps.tries;
 }
@@ -142,6 +145,7 @@ function resetProps() {
 }
 
 function winner() {
+  clearCards();
   setTimeout(()=> {alert('GAME OVER!!!'); 
 
   clearInterval(timerId);
